@@ -1,0 +1,17 @@
+useful commnad
+#show interface info
+show ip interface brief
+
+#to clear router config
+delete nvram:startup-config
+#stop,start at gns3
+
+#check status and configuration
+show crypto ipsec transform-set
+show crypto map
+show crypto ipsec sa
+debug crypto isakmp
+
+#verify the conenction ping to loopback [ping 1.1.1.1 source 3.3.3.3
+] at niessie and check by "show crypto ipsec sa" the packet will increase
+[#pkts decaps: 14, #pkts decrypt: 14, #pkts verify: 14]

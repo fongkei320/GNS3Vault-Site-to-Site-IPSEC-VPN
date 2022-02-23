@@ -1,0 +1,56 @@
+enable
+configure terminal
+hostname Niessie
+enable secret cisco
+line console 0
+password cisco
+login
+exit
+line vty 0 4
+password cisco
+login
+exit
+service password-encryption
+banner motd $ Welcome to Niessie $
+interface ethernet 0/0
+ip address 192.168.23.3 255.255.255.0
+no shutdown
+exit
+interface loopback 0
+ip address 3.3.3.3 255.255.255.0
+exit
+
+router ospf 1
+network 0.0.0.0 255.255.255.255 area 0
+router-id 3.3.3.3
+exit
+
+crypto isakmp policy 10
+authentication pre-share
+encryption aes 256
+hash sha
+group 5
+lifetime 3600
+crypto isakmp key 0 VAULT address 192.168.12.1
+crypto ipsec transform-set MYTRANS esp-aes 256 esp-sha-hmac
+exit
+crypto ipsec security-association lifetime seconds 1800
+
+access-list 100 permit ip 3.3.3.0 0.0.0.255 1.1.1.0 0.0.0.255
+
+do show access-list
+
+crypto map MYMAP 10 ipsec-isakmp
+match address 100
+set peer 192.168.12.1
+set pfs group5
+set transform-set MYTRANS
+set security-association lifetime seconds 1800
+exit
+
+int e0/0
+crypto map MYMAP
+exit
+
+exit
+copy running-config startup-config

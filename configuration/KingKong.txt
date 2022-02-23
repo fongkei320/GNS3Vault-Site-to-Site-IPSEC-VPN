@@ -1,0 +1,30 @@
+enable
+configure terminal
+hostname KingKong
+enable secret cisco
+line console 0
+password cisco
+login
+exit
+line vty 0 4
+password cisco
+login
+exit
+service password-encryption
+banner motd $ Welcome to KingKong $
+interface ethernet 0/0
+ip address 192.168.12.2 255.255.255.0
+no shutdown
+exit
+interface ethernet 1/0
+ip address 192.168.23.2 255.255.255.0
+no shutdown
+exit
+
+router ospf 1
+network 0.0.0.0 255.255.255.255 area 0
+router-id 2.2.2.2
+exit
+
+exit
+copy running-config startup-config
